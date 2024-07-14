@@ -92,11 +92,11 @@
   # Enable Bluetooth
   hardware.bluetooth.enable = true;
 
-  # hardware.graphics = {
-  #   enable = true;
-  #   enable32bit = true;
-  #   };
-  #
+  hardware.graphics = {
+    enable = true;
+    # enable32bit = true;
+    };
+
   sound.enable = true;
   security.rtkit.enable = true;
 
@@ -161,7 +161,7 @@
 
     shellAliases = {
       ll = "ls -l";
-      update = "sudo nixos-rebuild switch --flake /etc/nixos#work-laptop";
+      # update = "sudo nixos-rebuild switch --flake ~/nixos-config#work-laptop";
     };
     ohMyZsh = {
       enable = true;

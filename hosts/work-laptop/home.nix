@@ -20,6 +20,7 @@
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = with pkgs; [
+    gnomeExtensions.user-themes
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello
@@ -73,15 +74,55 @@
     EDITOR = "nvim";
   };
 
-  dconf = {
+  gtk = {
     enable = true;
-    settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
-    settings."org/gnome/shell" = {
+    iconTheme = {
+      name = "Papirus-Dark";
+      package = pkgs.papirus-icon-theme;
+    };
+    # theme = {
+    #   name = "palenight";
+    #   package = pkgs.palenight-theme;
+    # };
+    # cursorTheme = {
+    #   name = "Numix-Cursor";
+    #   package = pkgs.numix-cursor-theme;
+    # };
+    gtk3.extraConfig = {
+      Settings = ''
+        gtk-application-prefer-dark-theme=1
+      '';
+    };
+    gtk4.extraConfig = {
+      Settings = ''
+        gtk-application-prefer-dark-theme=1
+      '';
+    };
+  };
+
+  # home.sessionVariables.GTK_THEME = "palenight";
+  # ...
+  dconf.settings = {
+    "org/gnome/shell" = {
       disable-user-extensions = false;
-      enabled-extensions = with pkgs.gnomeExtensions; [
-        blur-my-shell.extensionUuid
-        gsconnect.extensionUuid
-        forge.extensionUuid
+      # `gnome-extensions list` for a list
+      enabled-extensions = [
+        "user-theme@gnome-shell-extensions.gcampax.github.com"
+	"appindicatorsupport@rgcjonas.gmail.com"
+      ];
+    };
+    "org/gnome/desktop/interface" = {
+      color-scheme = "prefer-dark";
+      enable-hot-corners = false;
+    };
+    "org/gnome/shell" = {
+      favorite-apps = [
+        "firefox.desktop"
+        "org.gnome.Nautilus.desktop"
+        "Alacritty.desktop"
+        # "virt-manager.desktop"
+        "slack.desktop"
+        "1password.desktop"
       ];
     };
   };

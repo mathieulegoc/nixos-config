@@ -1,15 +1,18 @@
 # Edit this configuration file to define what should be installed on
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
-
-{ config, lib, pkgs, inputs, ... }:
-
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      inputs.home-manager.nixosModules.default
-    ];
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}: {
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+    inputs.home-manager.nixosModules.default
+  ];
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
@@ -18,12 +21,12 @@
   networking.hostName = "mathieu-nixos"; # Define your hostname.
   # Pick only one of the below networking options.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
+  networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
 
   # Set your time zone.
   time.timeZone = "America/Los_Angeles";
   # services.automatic-timezoned.enable = true;
- 
+
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
@@ -32,7 +35,7 @@
   # i18n.defaultLocale = "en_US.UTF-8";
   console = {
     font = "ter-124b";
-  #   keyMap = "us";
+    #   keyMap = "us";
     useXkbConfig = true; # use xkb.options in tty.
     packages = with pkgs; [
       terminus_font
@@ -40,13 +43,12 @@
   };
 
   # Enable the X11 windowing system.
-   services.xserver.enable = true;
-
+  services.xserver.enable = true;
 
   # Enable the GNOME Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
-	
+
   nix.settings.experimental-features = ["nix-command" "flakes"];
   nixpkgs.config.allowUnfree = true;
 
@@ -67,23 +69,23 @@
   security.rtkit.enable = true;
 
   services.pipewire = {
-	enable = true;
-	alsa.enable = true;
-  	alsa.support32Bit = true;
-	pulse.enable = true;
-	jack.enable = true;
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    jack.enable = true;
   };
 
   # Enable touchpad support (enabled default in most desktopManager).
   services.libinput.enable = true;
-  users.users.root.hashedPassword = "!"; 
-  users.defaultUserShell=pkgs.zsh;
+  users.users.root.hashedPassword = "!";
+  users.defaultUserShell = pkgs.zsh;
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.mathieu = {
     isNormalUser = true;
     home = "/home/mathieu";
     description = "Mathieu";
-    extraGroups = [ "wheel" "networkmanager" "libvirtd" ]; # Enable ‘sudo’ for the user.
+    extraGroups = ["wheel" "networkmanager" "libvirtd"]; # Enable ‘sudo’ for the user.
     packages = with pkgs; [
       firefox
       tree
@@ -92,9 +94,9 @@
       pkgs.slack
     ];
   };
-  
+
   home-manager = {
-  extraSpecialArgs= {inherit inputs;};
+    extraSpecialArgs = {inherit inputs;};
     users = {
       "mathieu" = import ./home.nix;
     };
@@ -118,26 +120,25 @@
   programs.hyprland.enable = true;
 
   programs.zsh = {
-	  enable = true;
-	  enableCompletion = true;
-	  autosuggestions.enable = true;
-	  syntaxHighlighting.enable = true;
+    enable = true;
+    enableCompletion = true;
+    autosuggestions.enable = true;
+    syntaxHighlighting.enable = true;
 
-	  shellAliases = {
-	    ll = "ls -l";
-	    update = "sudo nixos-rebuild switch";
-	  };
-	ohMyZsh = {
-	    enable = true;
-	    plugins = [ "git" ];
-	    theme = "robbyrussell";
-	  };
-	};
+    shellAliases = {
+      ll = "ls -l";
+      update = "sudo nixos-rebuild switch";
+    };
+    ohMyZsh = {
+      enable = true;
+      plugins = ["git"];
+      theme = "robbyrussell";
+    };
+  };
 
   fonts.packages = with pkgs; [
-    (nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" ]; })
+    (nerdfonts.override {fonts = ["FiraCode" "DroidSansMono"];})
   ];
-
 
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
   # Some programs need SUID wrappers, can be configured further or are
@@ -182,6 +183,4 @@
   #
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
   system.stateVersion = "24.05"; # Did you read the comment?
-
 }
-

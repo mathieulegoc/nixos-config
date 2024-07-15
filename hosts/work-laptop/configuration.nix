@@ -10,7 +10,7 @@
 }: {
   imports = [
     # Include the results of the hardware scan.
-      # <nixos-hardware/lenovo/thinkpad/x1/9th-gen>
+    # <nixos-hardware/lenovo/thinkpad/x1/9th-gen>
     ./hardware-configuration.nix
     inputs.home-manager.nixosModules.default
   ];
@@ -49,6 +49,12 @@
     displayManager.gdm.enable = true;
     desktopManager.gnome.enable = true;
   };
+
+  # Enable fingerprint reader
+  services.fprintd.enable = true;
+  services.fprintd.tod.enable = true;
+  services.fprintd.tod.driver = pkgs.libfprint-2-tod1-vfs0090;
+
   # services.gnome.core-utilities.enable = false;
   environment.gnome.excludePackages = with pkgs; [
     gnome-tour
@@ -95,7 +101,7 @@
   hardware.graphics = {
     enable = true;
     # enable32bit = true;
-    };
+  };
 
   sound.enable = true;
   security.rtkit.enable = true;
@@ -129,6 +135,8 @@
           slack
           alacritty
           zed-editor
+          lazygit
+          zellij
         ];
       };
     };
@@ -147,11 +155,19 @@
     alejandra
     swww
     gnomeExtensions.appindicator
+    gnome-tweaks
   ];
 
   services.udev.packages = with pkgs; [gnome.gnome-settings-daemon];
-  programs.dconf.enable = true;
   programs.hyprland.enable = true;
+  programs.dconf.enable = true;
+  programs._1password.enable = true;
+  programs._1password-gui = {
+    enable = true;
+    # Certain features, including CLI integration and system authentication support,
+    # require enabling PolKit integration on some desktop environments (e.g. Plasma).
+    polkitPolicyOwners = ["mathieu"];
+  };
 
   programs.zsh = {
     enable = true;

@@ -111,6 +111,9 @@
         "appindicatorsupport@rgcjonas.gmail.com"
       ];
     };
+    "org/gnome/shell/app-switcher" = {
+      current-workspace-only = true;
+    };
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
       enable-hot-corners = false;
@@ -123,7 +126,7 @@
       secondary-color = "#000000";
     };
     "org/gnome/desktop/wm/preferences" = {
-      button-layout = "appmenu:maximize,minimize,close";
+      button-layout = "appmenu:minimize,maximize,close";
       num-workspaces = 10;
     };
     "org/gnome/desktop/wm/keybindings" = {
@@ -188,9 +191,6 @@
     };
     "org/gnome/mutter" = {
       workspaces-only-on-primary = true;
-    };
-    "org/gnome/shell/app-switcher" = {
-      current-workspace-only = false;
     };
   };
 

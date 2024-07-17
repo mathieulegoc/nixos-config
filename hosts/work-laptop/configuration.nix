@@ -12,6 +12,7 @@
     # Include the results of the hardware scan.
     # <nixos-hardware/lenovo/thinkpad/x1/9th-gen>
     ./hardware-configuration.nix
+    ./udev.nix
     inputs.home-manager.nixosModules.default
   ];
 
@@ -51,9 +52,9 @@
   };
 
   # Enable fingerprint reader
-  services.fprintd.enable = true;
-  services.fprintd.tod.enable = true;
-  services.fprintd.tod.driver = pkgs.libfprint-2-tod1-vfs0090;
+  # services.fprintd.enable = true;
+  # services.fprintd.tod.enable = true;
+  # services.fprintd.tod.driver = pkgs.libfprint-2-tod1-vfs0090;
 
   # services.gnome.core-utilities.enable = false;
   environment.gnome.excludePackages = with pkgs; [
@@ -113,7 +114,127 @@
     pulse.enable = true;
     jack.enable = true;
   };
-
+  programs.nix-ld = {
+    enable = true;
+    libraries = with pkgs; [
+      fuse
+      udev
+      # desktop-file-utils
+      # xorg.libXcomposite
+      # xorg.libXtst
+      # xorg.libXrandr
+      # xorg.libXext
+      # xorg.libX11
+      # xorg.libXfixes
+      # libGL
+      #
+      # gst_all_1.gstreamer
+      # gst_all_1.gst-plugins-ugly
+      # gst_all_1.gst-plugins-base
+      # libdrm
+      # xorg.xkeyboardconfig
+      # xorg.libpciaccess
+      #
+      # glib
+      # gtk2
+      # bzip2
+      # zlib
+      # gdk-pixbuf
+      #
+      # xorg.libXinerama
+      # xorg.libXdamage
+      # xorg.libXcursor
+      # xorg.libXrender
+      # xorg.libXScrnSaver
+      # xorg.libXxf86vm
+      # xorg.libXi
+      # xorg.libSM
+      # xorg.libICE
+      # freetype
+      # curlWithGnuTls
+      # nspr
+      # nss
+      # fontconfig
+      # cairo
+      # pango
+      # expat
+      # dbus
+      # cups
+      # libcap
+      # SDL2
+      # libusb1
+      # udev
+      # dbus-glib
+      # atk
+      # at-spi2-atk
+      # libudev0-shim
+      #
+      # xorg.libXt
+      # xorg.libXmu
+      # xorg.libxcb
+      # xorg.xcbutil
+      # xorg.xcbutilwm
+      # xorg.xcbutilimage
+      # xorg.xcbutilkeysyms
+      # xorg.xcbutilrenderutil
+      # libGLU
+      # libuuid
+      # libogg
+      # libvorbis
+      # SDL
+      # SDL2_image
+      # glew110
+      # openssl
+      # libidn
+      # tbb
+      # wayland
+      # mesa
+      # libxkbcommon
+      # vulkan-loader
+      #
+      # flac
+      # freeglut
+      # libjpeg
+      # libpng12
+      # libpulseaudio
+      # libsamplerate
+      # libmikmod
+      # libtheora
+      # libtiff
+      # pixman
+      # speex
+      # SDL_image
+      # SDL_ttf
+      # SDL_mixer
+      # SDL2_ttf
+      # SDL2_mixer
+      # libappindicator-gtk2
+      # libcaca
+      # libcanberra
+      # libgcrypt
+      # libvpx
+      # librsvg
+      # xorg.libXft
+      # libvdpau
+      # alsa-lib
+      #
+      # harfbuzz
+      # e2fsprogs
+      # libgpg-error
+      # keyutils.lib
+      # libjack2
+      # fribidi
+      # p11-kit
+      #
+      # gmp
+      #
+      # libtool.lib
+      # xorg.libxshmfence
+      # at-spi2-core
+      # gtk3
+      # stdenv.cc.cc.lib
+    ];
+  };
   # Enable touchpad support (enabled default in most desktopManager).
   services.libinput.enable = true;
   users.defaultUserShell = pkgs.zsh;
@@ -137,6 +258,11 @@
           zed-editor
           lazygit
           zellij
+          gcc-arm-embedded
+          segger-ozone
+          segger-jlink
+          picoscope
+          vscode
         ];
       };
     };
@@ -156,6 +282,8 @@
     swww
     gnomeExtensions.appindicator
     gnome-tweaks
+    fuse
+    usbutils
   ];
 
   services.udev.packages = with pkgs; [gnome.gnome-settings-daemon];
@@ -195,6 +323,10 @@
     (nerdfonts.override {fonts = ["FiraCode" "DroidSansMono"];})
   ];
 
+  nixpkgs.config.permittedInsecurePackages = [
+    "segger-jlink-qt4-796b"
+  ];
+  nixpkgs.config.segger-jlink.acceptLicense = true;
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.

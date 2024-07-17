@@ -76,10 +76,10 @@
 
   gtk = {
     enable = true;
-    iconTheme = {
-      name = "Papirus-Dark";
-      package = pkgs.papirus-icon-theme;
-    };
+    # iconTheme = {
+    #   name = "Papirus-Dark";
+    #   package = pkgs.papirus-icon-theme;
+    # };
     # theme = {
     #   name = "palenight";
     #   package = pkgs.palenight-theme;
@@ -108,12 +108,73 @@
       # `gnome-extensions list` for a list
       enabled-extensions = [
         "user-theme@gnome-shell-extensions.gcampax.github.com"
-	"appindicatorsupport@rgcjonas.gmail.com"
+        "appindicatorsupport@rgcjonas.gmail.com"
       ];
     };
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
       enable-hot-corners = false;
+    };
+    "org/gnome/desktop/session" = {
+      idle-delay = 900;
+    };
+    "org/gnome/desktop/screensaver" = {
+      primary-color = "#77767B";
+      secondary-color = "#000000";
+    };
+    "org/gnome/desktop/wm/preferences" = {
+      button-layout = "appmenu:maximize,minimize,close";
+      num-workspaces = 10;
+    };
+    "org/gnome/desktop/wm/keybindings" = {
+      close = ["<Super>q"];
+      move-to-workspace-1 = ["<Shift><Super>1"];
+      move-to-workspace-2 = ["<Shift><Super>2"];
+      move-to-workspace-3 = ["<Shift><Super>3"];
+      move-to-workspace-4 = ["<Shift><Super>4"];
+      move-to-workspace-5 = ["<Shift><Super>5"];
+      move-to-workspace-6 = ["<Shift><Super>6"];
+      move-to-workspace-7 = ["<Shift><Super>7"];
+      move-to-workspace-8 = ["<Shift><Super>8"];
+      move-to-workspace-9 = ["<Shift><Super>9"];
+      move-to-workspace-0 = ["<Shift><Super>0"];
+      switch-to-workspace-1 = ["<Super>1"];
+      switch-to-workspace-2 = ["<Super>2"];
+      switch-to-workspace-3 = ["<Super>3"];
+      switch-to-workspace-4 = ["<Super>4"];
+      switch-to-workspace-5 = ["<Super>5"];
+      switch-to-workspace-6 = ["<Super>6"];
+      switch-to-workspace-7 = ["<Super>7"];
+      switch-to-workspace-8 = ["<Super>8"];
+      switch-to-workspace-9 = ["<Super>9"];
+      switch-to-workspace-0 = ["<Super>0"];
+    };
+    "org/gnome/settings-daemon/plugins/media-keys" = {
+      custom-keybindings = [
+        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
+        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/"
+        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/"
+      ];
+    };
+    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
+      name = "Alacritty";
+      command = "alacritty";
+      binding = "<Super>Return";
+    };
+    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" = {
+      name = "rofi launcher";
+      command = "rofi -theme nord -show run -display-run 'run: '";
+      binding = "<Super>space";
+    };
+    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2" = {
+      name = "1Password";
+      command = "1password";
+      binding = "<Ctrl><Shift>x";
+    };
+    "org/gnome/desktop/peripherals/touchpad" = {
+      tap-to-click = false;
+      two-finger-scrolling-enabled = true;
+      natural-scroll = true;
     };
     "org/gnome/shell" = {
       favorite-apps = [
@@ -124,6 +185,12 @@
         "slack.desktop"
         "1password.desktop"
       ];
+    };
+    "org/gnome/mutter" = {
+      workspaces-only-on-primary = true;
+    };
+    "org/gnome/shell/app-switcher" = {
+      current-workspace-only = false;
     };
   };
 

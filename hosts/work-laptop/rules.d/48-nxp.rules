@@ -1,0 +1,10 @@
+#
+# This file is going to be stored at /etc/udev/rules.d on installation of the J-Link package
+# It makes sure that non-superuser have access to the connected J-Links, so JLinkExe etc. can be executed as non-superuser and can work with J-Link
+#
+#
+# Matches are AND combined, meaning: a==b,c==d,do stuff
+# results in:                        if (a == b) && (c == d) -> do stuff
+#
+
+ATTR{idProduct}=="0090", ATTR{idVendor}=="1fc9", MODE="666"

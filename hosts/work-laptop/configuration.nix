@@ -13,6 +13,8 @@
     # <nixos-hardware/lenovo/thinkpad/x1/9th-gen>
     ./hardware-configuration.nix
     ./udev.nix
+    ./gnome.nix
+    ./libvirt.nix
     inputs.home-manager.nixosModules.default
   ];
 
@@ -57,47 +59,18 @@
   # services.fprintd.tod.driver = pkgs.libfprint-2-tod1-vfs0090;
 
   # services.gnome.core-utilities.enable = false;
-  environment.gnome.excludePackages = with pkgs; [
-    gnome-tour
-    cheese
-    eog
-    gnome-calendar
-    cheese # webcam tool
-    gnome-terminal
-    gnome.gnome-weather
-    gnome.gnome-music
-    gnome.gnome-contacts
-    gnome.gnome-clocks
-    gnome.gnome-maps
-    gnome-font-viewer
-    gnome.gnome-logs
-    gedit # text editor
-    epiphany # web browser
-    geary # email reader
-    evince # document viewer
-    totem # video player
-    loupe
-    simple-scan
-    snapshot
-    yelp
-    gnome-text-editor
-    gnome-connections
-  ];
-
-  nix.settings.experimental-features = ["nix-command" "flakes"];
   nixpkgs.config.allowUnfree = true;
 
   # Configure keymap in X11
   services.xserver.xkb.layout = "us";
-  services.xserver.xkb.options = "escape:swapcaps";
   # Enable CUPS to print documents.
   # services.printing.enable = true;
 
   # Enable sound.
   hardware.pulseaudio.enable = false;
-
   # Enable Bluetooth
   hardware.bluetooth.enable = true;
+  services.blueman.enable = true;
 
   hardware.graphics = {
     enable = true;
@@ -112,129 +85,6 @@
     alsa.support32Bit = true;
     pulse.enable = true;
     jack.enable = true;
-  };
-  programs.nix-ld = {
-    enable = true;
-    libraries = with pkgs; [
-      fuse
-      udev
-      libxcrypt
-      libnsl
-      desktop-file-utils
-      xorg.libXcomposite
-      xorg.libXtst
-      xorg.libXrandr
-      xorg.libXext
-      xorg.libX11
-      xorg.libXfixes
-      libGL
-
-      gst_all_1.gstreamer
-      gst_all_1.gst-plugins-ugly
-      gst_all_1.gst-plugins-base
-      libdrm
-      xorg.xkeyboardconfig
-      xorg.libpciaccess
-
-      glib
-      gtk2
-      bzip2
-      zlib
-      gdk-pixbuf
-
-      xorg.libXinerama
-      xorg.libXdamage
-      xorg.libXcursor
-      xorg.libXrender
-      xorg.libXScrnSaver
-      xorg.libXxf86vm
-      xorg.libXi
-      xorg.libSM
-      xorg.libICE
-      freetype
-      curlWithGnuTls
-      nspr
-      nss
-      fontconfig
-      cairo
-      pango
-      expat
-      dbus
-      cups
-      libcap
-      SDL2
-      libusb1
-      udev
-      dbus-glib
-      atk
-      at-spi2-atk
-      libudev0-shim
-
-      xorg.libXt
-      xorg.libXmu
-      xorg.libxcb
-      xorg.xcbutil
-      xorg.xcbutilwm
-      xorg.xcbutilimage
-      xorg.xcbutilkeysyms
-      xorg.xcbutilrenderutil
-      libGLU
-      libuuid
-      libogg
-      libvorbis
-      SDL
-      SDL2_image
-      glew110
-      openssl
-      libidn
-      tbb
-      wayland
-      mesa
-      libxkbcommon
-      vulkan-loader
-
-      flac
-      freeglut
-      libjpeg
-      libpng12
-      libpulseaudio
-      libsamplerate
-      libmikmod
-      libtheora
-      libtiff
-      pixman
-      speex
-      SDL_image
-      SDL_ttf
-      SDL_mixer
-      SDL2_ttf
-      SDL2_mixer
-      libappindicator-gtk2
-      libcaca
-      libcanberra
-      libgcrypt
-      libvpx
-      librsvg
-      xorg.libXft
-      libvdpau
-      alsa-lib
-
-      harfbuzz
-      e2fsprogs
-      libgpg-error
-      keyutils.lib
-      libjack2
-      fribidi
-      p11-kit
-
-      gmp
-
-      libtool.lib
-      xorg.libxshmfence
-      at-spi2-core
-      gtk3
-      stdenv.cc.cc.lib
-    ];
   };
   # Enable touchpad support (enabled default in most desktopManager).
   services.libinput.enable = true;
@@ -273,6 +123,11 @@
           gdb
           gimp
           inkscape
+          spice
+          spice-gtk
+          spice-protocol
+          win-virtio
+          win-spice
         ];
       };
     };
@@ -298,6 +153,7 @@
     pyenv
     appimage-run
     openssl
+    virtiofsd
   ];
 
   services.udev.packages = with pkgs; [gnome.gnome-settings-daemon];
@@ -360,6 +216,23 @@
     settings.KbdInteractiveAuthentication = false;
     #settings.PermitRootLogin = "yes";
   };
+
+  # Optimization settings and garbage collection automation
+  nix = {
+    settings = {
+      auto-optimise-store = true;
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+    };
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 7d";
+    };
+  };
+
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];

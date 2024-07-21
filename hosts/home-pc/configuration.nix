@@ -52,11 +52,6 @@
     desktopManager.gnome.enable = true;
   };
 
-  # Enable fingerprint reader
-  # services.fprintd.enable = true;
-  # services.fprintd.tod.enable = true;
-  # services.fprintd.tod.driver = pkgs.libfprint-2-tod1-vfs0090;
-
   # services.gnome.core-utilities.enable = false;
   nixpkgs.config.allowUnfree = true;
 
@@ -75,6 +70,8 @@
     enable = true;
   };
 
+    services.xserver.videoDrivers= ["amdgpu"];
+
   # sound.enable = true;
   security.rtkit.enable = true;
 
@@ -89,6 +86,10 @@
   services.libinput.enable = true;
   users.defaultUserShell = pkgs.zsh;
   # Define a user account. Don't forget to set a password with ‘passwd’.
+programs.steam.enable=true;
+programs.steam.gamescopeSession.enable= true;
+programs.gamemode.enable = true;
+
   users = {
     users = {
       root.hashedPassword = "!";
@@ -122,11 +123,8 @@
           gdb
           gimp
           inkscape
-          spice
-          spice-gtk
-          spice-protocol
-          win-virtio
-          win-spice
+          mangohud
+          protonup
         ];
       };
     };
@@ -143,7 +141,7 @@
     pkgs.dunst
     libnotify
     alejandra
-    swww
+    swww:w
     gnomeExtensions.appindicator
     gnome-tweaks
     fuse

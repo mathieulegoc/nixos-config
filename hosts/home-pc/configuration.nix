@@ -70,7 +70,7 @@
     enable = true;
   };
 
-    services.xserver.videoDrivers= ["amdgpu"];
+  services.xserver.videoDrivers = ["amdgpu"];
 
   # sound.enable = true;
   security.rtkit.enable = true;
@@ -86,9 +86,9 @@
   services.libinput.enable = true;
   users.defaultUserShell = pkgs.zsh;
   # Define a user account. Don't forget to set a password with ‘passwd’.
-programs.steam.enable=true;
-programs.steam.gamescopeSession.enable= true;
-programs.gamemode.enable = true;
+  programs.steam.enable = true;
+  programs.steam.gamescopeSession.enable = true;
+  programs.gamemode.enable = true;
 
   users = {
     users = {

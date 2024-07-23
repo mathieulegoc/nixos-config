@@ -9,6 +9,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    fine-cmdline = {
+      url = "github:VonHeikemen/fine-cmdline.nvim";
+      flake = false;
+    };
   };
 
   outputs = {

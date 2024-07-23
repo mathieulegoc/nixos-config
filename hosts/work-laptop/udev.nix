@@ -166,6 +166,7 @@
       # CMSIS-DAP compatible adapters
       ATTRS{product}=="*CMSIS-DAP*", MODE="0666", ENV{ID_MM_DEVICE_IGNORE}="1", ENV{ID_MM_PORT_IGNORE}="1"
 
+      ATTRS{idVendor}=="0ce9", ATTRS{idProduct}=="1217", MODE="0666", ENV{ID_MM_DEVICE_IGNORE}="1", ENV{ID_MM_PORT_IGNORE}="1"
     '';
   };
 }

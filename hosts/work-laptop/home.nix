@@ -1,12 +1,19 @@
 {
   config,
   pkgs,
+  lib,
   ...
-}: {
+}: let
+  inherit (import ./variables.nix) gitUsername gitEmail;
+in {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "mathieu";
   home.homeDirectory = "/home/mathieu";
+
+  imports = [
+    ./neovim.nix
+  ];
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -38,6 +45,11 @@
     #   echo "Hello, ${config.home.username}!"
     # '')
   ];
+  programs.git = {
+    enable = true;
+    userName = "${gitUsername}";
+    userEmail = "${gitEmail}";
+  };
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
@@ -119,7 +131,7 @@
       enable-hot-corners = false;
     };
     "org/gnome/desktop/session" = {
-      idle-delay = 900;
+      idle-delay = lib.hm.gvariant.mkUint32 900;
     };
     "org/gnome/desktop/screensaver" = {
       primary-color = "#77767B";
@@ -195,9 +207,8 @@
         "firefox.desktop"
         "org.gnome.Nautilus.desktop"
         "Alacritty.desktop"
-        # "virt-manager.desktop"
+        "virt-manager.desktop"
         "slack.desktop"
-        "1password.desktop"
       ];
     };
     "org/gnome/mutter" = {

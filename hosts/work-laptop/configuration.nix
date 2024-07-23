@@ -18,8 +18,19 @@
   ];
 
   # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot = {
+    loader.systemd-boot.enable = true;
+    loader.efi.canTouchEfiVariables = true;
+    binfmt.registrations.appimage = {
+      wrapInterpreterInShell = false;
+      interpreter = "${pkgs.appimage-run}/bin/appimage-run";
+      recognitionType = "magic";
+      offset = 0;
+      mask = ''\xff\xff\xff\xff\x00\x00\x00\x00\xff\xff\xff'';
+      magicOrExtension = ''\x7fELF....AI\x02'';
+    };
+    plymouth.enable = true;
+  };
 
   networking.hostName = "mathieu-work-laptop"; # Define your hostname.
   # Pick only one of the below networking options.
@@ -69,7 +80,7 @@
   hardware.pulseaudio.enable = false;
   # Enable Bluetooth
   hardware.bluetooth.enable = true;
-  services.blueman.enable = true;
+  #  services.blueman.enable = true;
 
   hardware.graphics = {
     enable = true;
@@ -90,6 +101,8 @@
   users.defaultUserShell = pkgs.zsh;
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users = {
+    mutableUsers = true;
+
     users = {
       root.hashedPassword = "!";
       mathieu = {
@@ -127,6 +140,7 @@
           spice-protocol
           win-virtio
           win-spice
+          sublime4
         ];
       };
     };
@@ -135,8 +149,8 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     git
+    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
     pkgs.waybar
     rofi-wayland
@@ -156,30 +170,39 @@
   ];
 
   services.udev.packages = with pkgs; [gnome.gnome-settings-daemon];
-  programs.hyprland.enable = true;
-  programs.dconf.enable = true;
-  programs._1password.enable = true;
-  programs._1password-gui = {
-    enable = true;
-    # Certain features, including CLI integration and system authentication support,
-    # require enabling PolKit integration on some desktop environments (e.g. Plasma).
-    polkitPolicyOwners = ["mathieu"];
-  };
 
-  programs.zsh = {
-    enable = true;
-    enableCompletion = true;
-    autosuggestions.enable = true;
-    syntaxHighlighting.enable = true;
-
-    shellAliases = {
-      ll = "ls -l";
-      # update = "sudo nixos-rebuild switch --flake ~/nixos-config#work-laptop";
-    };
-    ohMyZsh = {
+  programs = {
+    fuse.userAllowOther = true;
+    mtr.enable = true;
+    gnupg.agent = {
       enable = true;
-      plugins = ["git"];
-      theme = "robbyrussell";
+      enableSSHSupport = true;
+    };
+    hyprland.enable = true;
+    dconf.enable = true;
+    _1password.enable = true;
+    _1password-gui = {
+      enable = true;
+      # Certain features, including CLI integration and system authentication support,
+      # require enabling PolKit integration on some desktop environments (e.g. Plasma).
+      polkitPolicyOwners = ["mathieu"];
+    };
+
+    zsh = {
+      enable = true;
+      enableCompletion = true;
+      autosuggestions.enable = true;
+      syntaxHighlighting.enable = true;
+
+      shellAliases = {
+        ll = "ls -l";
+        # update = "sudo nixos-rebuild switch --flake ~/nixos-config#work-laptop";
+      };
+      ohMyZsh = {
+        enable = true;
+        plugins = ["git"];
+        theme = "robbyrussell";
+      };
     };
   };
   home-manager = {
@@ -194,9 +217,11 @@
 
   nixpkgs.config.permittedInsecurePackages = [
     "segger-jlink-qt4-796s"
+    "openssl-1.1.1w"
   ];
   nixpkgs.config.segger-jlink.acceptLicense = true;
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
+
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;

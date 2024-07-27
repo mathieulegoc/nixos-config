@@ -8,5 +8,5 @@
 
   # Program Options
   browser = "firefox"; # Set Default Browser (google-chrome-stable for google-chrome)
-  terminal = "alacritty"; # Set Default System Terminal
+  terminal = "kitty"; # Set Default System Terminal
 }

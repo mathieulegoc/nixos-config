@@ -4,7 +4,7 @@
   lib,
   ...
 }: let
-  inherit (import ./variables.nix) gitUsername gitEmail;
+  inherit (import ./variables.nix) gitUsername gitEmail terminal;
 in {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
@@ -45,12 +45,33 @@ in {
     #   echo "Hello, ${config.home.username}!"
     # '')
   ];
-  programs.git = {
-    enable = true;
-    userName = "${gitUsername}";
-    userEmail = "${gitEmail}";
+  programs = {
+    git = {
+      enable = true;
+      userName = "${gitUsername}";
+      userEmail = "${gitEmail}";
+    };
+    kitty = {
+      enable = true;
+      package = pkgs.kitty;
+      theme = "Catppuccin-Mocha";
+      font.name = "JetBrainsMono Nerd Font";
+      settings = {
+        scrollback_lines = 2000;
+        wheel_scroll_min_lines = 1;
+        window_padding_width = 4;
+        confirm_os_window_close = 0;
+      };
+      extraConfig = ''
+        tab_bar_style fade
+        tab_fade 1
+        active_tab_font_style   bold
+        inactive_tab_font_style bold
+      '';
+    };
+    # Let Home Manager install and manage itself.
+    home-manager.enable = true;
   };
-
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
   home.file = {
@@ -115,12 +136,23 @@ in {
   # home.sessionVariables.GTK_THEME = "palenight";
   # ...
   dconf.settings = {
+    "org/gnome/settings-daemon/plugins/power" = {
+      sleep-inactive-battery-timeout = 1800;
+      sleep-inactive-ac-timeout = "nothing";
+    };
     "org/gnome/shell" = {
       disable-user-extensions = false;
       # `gnome-extensions list` for a list
       enabled-extensions = [
         "user-theme@gnome-shell-extensions.gcampax.github.com"
         "appindicatorsupport@rgcjonas.gmail.com"
+      ];
+      favorite-apps = [
+        "firefox.desktop"
+        "org.gnome.Nautilus.desktop"
+        "kitty.desktop"
+        "virt-manager.desktop"
+        "slack.desktop"
       ];
     };
     "org/gnome/shell/app-switcher" = {
@@ -139,7 +171,7 @@ in {
     };
     "org/gnome/desktop/wm/preferences" = {
       button-layout = "appmenu:minimize,maximize,close";
-      num-workspaces = 10;
+      num-workspaces = 5;
     };
     "org/gnome/desktop/wm/keybindings" = {
       close = ["<Super>q"];
@@ -183,8 +215,8 @@ in {
       ];
     };
     "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
-      name = "Alacritty";
-      command = "alacritty";
+      name = "Terminal";
+      command = "${terminal}";
       binding = "<Super>Return";
     };
     "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" = {
@@ -202,15 +234,7 @@ in {
       two-finger-scrolling-enabled = true;
       natural-scroll = true;
     };
-    "org/gnome/shell" = {
-      favorite-apps = [
-        "firefox.desktop"
-        "org.gnome.Nautilus.desktop"
-        "Alacritty.desktop"
-        "virt-manager.desktop"
-        "slack.desktop"
-      ];
-    };
+
     "org/gnome/mutter" = {
       workspaces-only-on-primary = true;
     };
@@ -219,7 +243,4 @@ in {
       uris = ["qemu:///system"];
     };
   };
-
-  # Let Home Manager install and manage itself.
-  programs.home-manager.enable = true;
 }

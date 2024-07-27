@@ -171,7 +171,7 @@
       ];
     };
     "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
-      name = "Alacritty";
+      name = "Terminal";
       command = "alacritty";
       binding = "<Super>Return";
     };

@@ -14,6 +14,7 @@
     ./udev.nix
     ./gnome.nix
     ./libvirt.nix
+    ./libs.nix
     inputs.home-manager.nixosModules.default
   ];
 
@@ -117,7 +118,6 @@
           neovim
           stow
           slack
-          alacritty
           zed-editor
           lazygit
           zellij
@@ -212,7 +212,7 @@
     };
   };
   fonts.packages = with pkgs; [
-    (nerdfonts.override {fonts = ["FiraCode" "DroidSansMono"];})
+    (nerdfonts.override {fonts = ["FiraCode" "DroidSansMono" "JetBrainsMono"];})
   ];
 
   nixpkgs.config.permittedInsecurePackages = [

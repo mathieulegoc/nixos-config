@@ -141,7 +141,7 @@
     pkgs.dunst
     libnotify
     alejandra
-    swww:w
+    swww
     gnomeExtensions.appindicator
     gnome-tweaks
     fuse

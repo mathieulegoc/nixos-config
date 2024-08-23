@@ -6,6 +6,10 @@
   programs.virt-manager.enable = true;
   virtualisation = {
     spiceUSBRedirection.enable = true;
+    docker = {
+      enable = true;
+      storageDriver = "btrfs";
+    };
     libvirtd = {
       enable = true;
       qemu = {

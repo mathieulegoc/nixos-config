@@ -13,7 +13,7 @@
     ./hardware-configuration.nix
     ./udev.nix
     ./gnome.nix
-    ./libvirt.nix
+    ./virtualization.nix
     ./libs.nix
     inputs.home-manager.nixosModules.default
   ];
@@ -110,10 +110,11 @@
         isNormalUser = true;
         home = "/home/mathieu";
         description = "Mathieu";
-        extraGroups = ["wheel" "networkmanager" "libvirtd"]; # Enable ‘sudo’ for the user.
+        extraGroups = ["wheel" "networkmanager" "libvirtd" "docker" "pico"]; # Enable ‘sudo’ for the user.
         packages = with pkgs; [
           firefox
           google-chrome
+          brave
           tree
           neovim
           stow
@@ -131,6 +132,7 @@
           cmake
           gcc
           clang
+          clang-tools
           gnumake
           gdb
           gimp
@@ -141,6 +143,7 @@
           win-virtio
           win-spice
           sublime4
+          saleae-logic-2
         ];
       };
     };
@@ -169,7 +172,12 @@
     virtiofsd
   ];
 
-  services.udev.packages = with pkgs; [gnome.gnome-settings-daemon];
+  # picoscope = picoscope.overrideAttrs(finalAttrs: previousAttr: {
+  #                               sourceRoot="./picoscope/"+previousAttr.sourceRoot;});
+  services.udev.packages = with pkgs; [
+    picoscope.rules
+    gnome.gnome-settings-daemon
+  ];
 
   programs = {
     fuse.userAllowOther = true;
@@ -211,9 +219,6 @@
       "mathieu" = import ./home.nix;
     };
   };
-  fonts.packages = with pkgs; [
-    (nerdfonts.override {fonts = ["FiraCode" "DroidSansMono" "JetBrainsMono"];})
-  ];
 
   nixpkgs.config.permittedInsecurePackages = [
     "segger-jlink-qt4-796s"
